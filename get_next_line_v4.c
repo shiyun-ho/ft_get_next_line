@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:21:56 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/25 20:10:06 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:16:02 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char *get_next_line(int fd)
             //this condition is not accurate cos it is applicable to all STASH 
             int line_iteration_check = ft_strlen(stash) % BUFFER_SIZE;
             //my stash already contains prev saved char
-            if (line_iteration_check != 0)
+            if (line_iteration_check == 0)
                 line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
             else
                 //TODO: i need to have a sep function to join start of stash with line and exit
