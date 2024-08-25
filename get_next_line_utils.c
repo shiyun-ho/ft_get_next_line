@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/24 20:41:07 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/25 19:54:54 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ size_t	ft_strlen(const char *s)
 	}
 	return (i);
 }
-//TODO: Function to join buffer to stash
-	//ft_strjoin(stash, buffer_array)
 char	*ft_strjoin(char const *s1, char const *s2, size_t size)
 {
 	char			*s_new;
@@ -96,4 +94,26 @@ int		ft_strchr_index(const char *s, int c)
 		i++;
 	}
 	return (0);
+}
+void	trim_newline(char *s1, int position)
+{
+	int	i;
+	int	start_position;
+	int end_position;
+	
+	if (!s1)
+		return;
+	start_position = position + 1;
+	end_position = ft_strlen(s1) - 1;
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		while (start_position <= end_position)
+		{
+			s1[i] = s1[start_position];
+			i++;
+			start_position++;
+		}
+		s1[i] = NULL;
+	}
 }

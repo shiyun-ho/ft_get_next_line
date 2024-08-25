@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_v3.c                                 :+:      :+:    :+:   */
+/*   get_next_line_v4.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:21:56 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/25 19:42:49 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/25 20:10:06 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,21 @@ char *get_next_line(int fd)
         int newline_position = ft_strchr_index(buffer_array, '\n');
         if (!line)
             line = (char *)ft_calloc(1, sizeof(char));
+            //condition to check if it is the second line printed
+            //this works only for FIRST iteration
         if (newline_position == NULL)
         {
-            //TODO: copy from stash instead
-            
-            line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
+            //this condition is not accurate cos it is applicable to all STASH 
+            int line_iteration_check = ft_strlen(stash) % BUFFER_SIZE;
+            //my stash already contains prev saved char
+            if (line_iteration_check != 0)
+                line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
+            else
+                //TODO: i need to have a sep function to join start of stash with line and exit
+                //OR a check that I exit 
+                line = ft_strjoin(line, stash, ft_strlen(stash)); 
         }
+    
         //if \n is found in BUFFER
         if (newline_position != NULL)
         {
@@ -91,20 +100,9 @@ char *get_next_line(int fd)
                 buffer_array = NULL;
                 stash = NULL;
             }
-            //dump my stash
-            // free(stash);
-            //problem - position is according to buffer_array, NOT stash
-            //TODO: Fix position issues
-            /**
-             * [ \n a b c d] -> newline_pos = 0 ( 4 elements behind )
-             * BUFFER_SIZE - index - 1; ==> behind  
-             * [ 1 2 3 4 5 \n a b c d] -> newline_pos = 5th index ((10 - 1) - 4)
-             * length of stash - 1 - BUFFER_SIZE - INDEX - 1; 
-            */
             int elements_remaining_buffer = BUFFER_SIZE - newline_position - 1;
             newline_position = (ft_strlen(stash) - 1) - elements_remaining_buffer;
             trim_newline(stash, newline_position);
-            // stash = ft_strjoin(stash, buffer_array + newline_position + 1, BUFFER_SIZE - newline_position);
             free(buffer_array);
             buffer_array = NULL;
             break;
@@ -130,7 +128,7 @@ int main() {
     }
 
     line = get_next_line(fd);
-    while (line && strlen(line) > 0) {
+    while (line && ft_strlen(line) > 0) {
         printf("%s\n", line);
         free(line);
         line = get_next_line(fd);
@@ -140,28 +138,3 @@ int main() {
 
     return (0);
 }
-// int main()
-// {
-//     int     fd;
-//     char    *line;
-    
-//     fd = open("hello.txt", O_RDONLY);
-    
-//     if (fd == -1)
-//     {
-//         printf("Unable to read file. \n");
-//         return 0;
-//     } else {
-//         printf("File was opened successfully! \n");
-//     }
-
-// //TODO: Fix this! Does not print next line!
-//     do {
-//         line = get_next_line(fd);
-//         printf("%s | ", line); 
-//     } while (!line);
-    
-//     close(fd);
-    
-//     return (0);
-// }
