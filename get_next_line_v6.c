@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:21:56 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/26 22:11:23 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/26 22:25:15 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,12 @@ char *get_next_line(int fd)
         if (!line)
             line = (char *)ft_calloc(1, sizeof(char));
         
+        //checks if the line has been returned prior (i.e. stash remaining from prev line)
+        int iteration_check = ft_strlen(stash) % BUFFER_SIZE;
+            
         //CASE: If '\n' cannot be found
         if (newline_position == -1)
         {
-            //checks if the line has been returned prior (i.e. stash remaining from prev line)
-            int iteration_check = ft_strlen(stash) % BUFFER_SIZE;
             if (iteration_check > 0)
                 line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
             else
