@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/25 19:54:54 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/26 21:03:17 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*ft_calloc(size_t n, size_t size)
 	}
 	return (ptr);
 }
-size_t	ft_strlen(const char *s)
+int	ft_strlen(const char *s)
 {
 	int	i;
 
@@ -47,21 +47,17 @@ size_t	ft_strlen(const char *s)
 	}
 	return (i);
 }
-char	*ft_strjoin(char const *s1, char const *s2, size_t size)
+char	*ft_strjoin(char const *s1, char const *s2, int size)
 {
 	char			*s_new;
 	unsigned int	s_new_size;
 	
-	int s1_len = ft_strlen(s1);
-	int s2_len = ft_strlen(s2);
 	s_new_size = ft_strlen(s1) + ft_strlen(s2);
-	s_new = ft_calloc(s_new_size, sizeof(char));
+	s_new = ft_calloc(s_new_size + 1, sizeof(char));
 	
-	//copy s1 to s_new
 	int i = 0;
 	if (ft_strlen(s1) > 0)
 	{
-		//s1 is STASH, which means it will keep looping
 		while (i < ft_strlen(s1))
 		{
 			s_new[i] = s1[i];
@@ -69,13 +65,31 @@ char	*ft_strjoin(char const *s1, char const *s2, size_t size)
 		}
 	}
 	int j = 0;
-	while (j < size)
+	//Error handling for when str joins buffer array to line
+	/**
+	 * line = ft_strjoin(line, buffer_array, newline_position);
+	 * size = newline_position
+	 * 		
+	 */
+	if (size < BUFFER_SIZE)
 	{
-		s_new[i + j] = s2[j];
-		j++;
+		while (j < size)
+		{
+			s_new[i + j] = s2[j];
+			j++;
+		}
+		s_new[i + j] = '\0';
 	}
-	s_new[i + j] = '\0';
-	//concatenate s1 and s2 to s_new : (stash + BUFFER)
+	else
+	{
+		while ((i + j) < s_new_size)
+		{
+			s_new[i + j] = s2[j];
+			j++;
+		}
+		s_new[s_new_size] = '\0';
+	}	
+	free((char *)s1);
 	return(s_new);
 }
 int		ft_strchr_index(const char *s, int c)
@@ -93,7 +107,7 @@ int		ft_strchr_index(const char *s, int c)
 			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 void	trim_newline(char *s1, int position)
 {
@@ -114,6 +128,6 @@ void	trim_newline(char *s1, int position)
 			i++;
 			start_position++;
 		}
-		s1[i] = NULL;
+		s1[i] = '\0';
 	}
 }

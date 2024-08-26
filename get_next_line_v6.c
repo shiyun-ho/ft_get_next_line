@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_v4.c                                 :+:      :+:    :+:   */
+/*   get_next_line_v6.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:21:56 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/26 16:41:41 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/26 22:11:23 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,23 @@ char *get_next_line(int fd)
         if (!stash)
             free(stash);
         stash = NULL;
-        return (stash);
+        return (NULL);
     }
     
-    buffer_array = (char *)ft_calloc(BUFFER_SIZE, sizeof(char));
+    buffer_array = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
     
     bytes_read = 1;
     while (bytes_read > 0)
     {
         bytes_read = read(fd, buffer_array, BUFFER_SIZE);
-    
+
         if (bytes_read < 0)
         {
             free(buffer_array);
             buffer_array = NULL;
             return (NULL);
         }
-        buffer_array[bytes_read] =  '\0';
+        buffer_array[bytes_read] = '\0';
         
         if (!stash)
             stash = (char *)ft_calloc(1, sizeof(char));
@@ -68,10 +68,13 @@ char *get_next_line(int fd)
         int newline_position = ft_strchr_index(buffer_array, '\n');
         if (!line)
             line = (char *)ft_calloc(1, sizeof(char));
-        if (newline_position == NULL)
+        
+        //CASE: If '\n' cannot be found
+        if (newline_position == -1)
         {
-            int line_iteration_check = ft_strlen(stash) % BUFFER_SIZE;
-            if (line_iteration_check == 0)
+            //checks if the line has been returned prior (i.e. stash remaining from prev line)
+            int iteration_check = ft_strlen(stash) % BUFFER_SIZE;
+            if (iteration_check > 0)
                 line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
             else
             {
@@ -81,11 +84,10 @@ char *get_next_line(int fd)
                     line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
             }
         }
-    
-        //if \n is found in BUFFER
-        if (newline_position != NULL)
+        else
         {
-            line = ft_strjoin(line, buffer_array, newline_position);
+            //size = index;
+            line = ft_strjoin(line, buffer_array + newline_position, newline_position);
             if (!line)
             {
                 free(buffer_array);
@@ -93,6 +95,7 @@ char *get_next_line(int fd)
                 buffer_array = NULL;
                 stash = NULL;
             }
+            //copy from buff_arr to line
             int elements_remaining_buffer = BUFFER_SIZE - newline_position - 1;
             newline_position = (ft_strlen(stash) - 1) - elements_remaining_buffer;
             trim_newline(stash, newline_position);
@@ -101,6 +104,10 @@ char *get_next_line(int fd)
             break;
         }
     }
+    free(buffer_array);
+    buffer_array = NULL;
+    if (bytes_read == 0)
+        return NULL;
     return (line);
 }
 #include <fcntl.h>
@@ -120,13 +127,11 @@ int main() {
         printf("File was opened successfully! \n");
     }
 
-    line = get_next_line(fd);
-    while (line && ft_strlen(line) > 0) {
-        printf("%s\n", line);
+    for (line = get_next_line(fd); line; line = get_next_line(fd))
+    {
+        printf("line: %s", line);
         free(line);
-        line = get_next_line(fd);
     }
-
     close(fd);
 
     return (0);

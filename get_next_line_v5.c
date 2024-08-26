@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_v4.c                                 :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:21:56 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/26 16:41:41 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/26 20:24:35 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,16 @@ char *get_next_line(int fd)
         if (!stash)
             free(stash);
         stash = NULL;
-        return (stash);
+        return (NULL);
     }
     
-    buffer_array = (char *)ft_calloc(BUFFER_SIZE, sizeof(char));
+    buffer_array = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
     
     bytes_read = 1;
     while (bytes_read > 0)
     {
         bytes_read = read(fd, buffer_array, BUFFER_SIZE);
-    
+        
         if (bytes_read < 0)
         {
             free(buffer_array);
@@ -68,10 +68,12 @@ char *get_next_line(int fd)
         int newline_position = ft_strchr_index(buffer_array, '\n');
         if (!line)
             line = (char *)ft_calloc(1, sizeof(char));
-        if (newline_position == NULL)
+        //TODO: Fix the issue of \n being concatenated to line
+            //CASE: I CANNOT find \n
+        if (newline_position == -1)
         {
             int line_iteration_check = ft_strlen(stash) % BUFFER_SIZE;
-            if (line_iteration_check == 0)
+            if (line_iteration_check > 0)
                 line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
             else
             {
@@ -83,8 +85,13 @@ char *get_next_line(int fd)
         }
     
         //if \n is found in BUFFER
-        if (newline_position != NULL)
+        else
         {
+            
+            /**
+             * This is a code break because everything from here DOES not work
+             */
+            //TODO: ERROR is here!!! ERROR!!!!
             line = ft_strjoin(line, buffer_array, newline_position);
             if (!line)
             {
@@ -100,7 +107,12 @@ char *get_next_line(int fd)
             buffer_array = NULL;
             break;
         }
+        
     }
+    free(buffer_array);
+    buffer_array = NULL;
+    if (bytes_read == 0)
+        return NULL;
     return (line);
 }
 #include <fcntl.h>
@@ -120,13 +132,11 @@ int main() {
         printf("File was opened successfully! \n");
     }
 
-    line = get_next_line(fd);
-    while (line && ft_strlen(line) > 0) {
-        printf("%s\n", line);
+    for (line = get_next_line(fd); line; line = get_next_line(fd))
+    {
+        printf("line: |%s|", line);
         free(line);
-        line = get_next_line(fd);
     }
-
     close(fd);
 
     return (0);
