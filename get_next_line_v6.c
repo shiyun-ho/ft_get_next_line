@@ -70,13 +70,16 @@ char *get_next_line(int fd)
             line = (char *)ft_calloc(1, sizeof(char));
         
         //checks if the line has been returned prior (i.e. stash remaining from prev line)
+            //LOGIC: remainder of stash / 5 (if > 0: it is more than 0, it will mean that stash was from prev line)
         int iteration_check = ft_strlen(stash) % BUFFER_SIZE;
             
         //CASE: If '\n' cannot be found
         if (newline_position == -1)
         {
+            //CASE: If stash had prev line saved result
             if (iteration_check > 0)
                 line = ft_strjoin(line, buffer_array, BUFFER_SIZE);
+            //CASE: If stash did not have prev saved result
             else
             {
                 if ((ft_strlen(stash) / BUFFER_SIZE) == 1)
@@ -87,24 +90,38 @@ char *get_next_line(int fd)
         }
         else
         {
-            //size = index;
-            line = ft_strjoin(line, buffer_array + newline_position, newline_position);
-            if (!line)
+            //CASE: If stash has prev line saved result
+            if (iteration_check > 0)
             {
-                free(buffer_array);
-                free(stash);
-                buffer_array = NULL;
-                stash = NULL;
+                //TODO: This is inefficient algorithm! Why are we having so many permutations?
+                //Perhaps the better thing to do is revise this algorithm to copy char before \n to stack
+                    //and paste to line
+                //THEN
+                    //clear stash
+                        //and copy char after when done 
             }
-            //copy from buff_arr to line
-            int elements_remaining_buffer = BUFFER_SIZE - newline_position - 1;
-            newline_position = (ft_strlen(stash) - 1) - elements_remaining_buffer;
-            trim_newline(stash, newline_position);
-            free(buffer_array);
-            buffer_array = NULL;
-            break;
+            //CASE: If stash does not contain prev line saved result
+            else
+            {
+                line = ft_strjoin(line, buffer_array + newline_position, newline_position);
+                if (!line)
+                {
+                    free(buffer_array);
+                    free(stash);
+                    buffer_array = NULL;
+                    stash = NULL;
+                }
+                //copy from buff_arr to line
+                int elements_remaining_buffer = BUFFER_SIZE - newline_position - 1;
+                newline_position = (ft_strlen(stash) - 1) - elements_remaining_buffer;
+                trim_newline(stash, newline_position);
+                free(buffer_array);
+                buffer_array = NULL;
+                break;    
+            }
         }
     }
+    //TODO: Consider if this is necessary
     free(buffer_array);
     buffer_array = NULL;
     if (bytes_read == 0)
