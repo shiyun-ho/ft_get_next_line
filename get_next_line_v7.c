@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_v7.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiyun <shiyun@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/27 22:22:18 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/27 22:59:02 by shiyun           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
  * @return: NULL: if there is nothing else to read, or an error occurred
  * @allowed functions: read(), malloc(), free()
 */
-#include <stdio.h>
-
+//TODO: Print \n if \n is found in the buffer
 char    *get_next_line(int fd)
 {
     ssize_t     bytes_read;
@@ -59,15 +58,13 @@ char    *get_next_line(int fd)
             //Allocate line by joining buffer to existing line
                 //CASE 1: if \n is not detected in buffer
                 //CASE 2: if \n is detected in buffer
-                //CASE 3: if stash retains from previous line read (NOT RESOLVED)
+                //CASE 3: if stash retains from previous line read
             if (!line)
                 line = (char *)ft_calloc(1, sizeof(char));
-            //TODO: Mechanism to detect if '\n' is detected
             
             int check_iteration = ft_strlen(stash) % BUFFER_SIZE;
             int check_subsequent = ft_strlen(stash) / BUFFER_SIZE;
-            //if my stash contains values from previous line buffer
-            if (check_iteration > 0 && check_subsequent > 1)
+            if (check_iteration > 0 && check_subsequent == 1)
                 line = ft_strjoin(line, stash, 0, ft_strlen(stash) - 1);
             else
                 line = ft_strjoin(line, buffer, 0, BUFFER_SIZE - 1);
@@ -106,7 +103,8 @@ int main() {
     int     fd;
     char    *line;
 
-    fd = open("hello.txt", O_RDONLY);
+//TODO: Resolve error - \n should be printed as empty line
+    fd = open("hello_2.txt", O_RDONLY);
 
     if (fd == -1) {
         printf(">>> Unable to read file. \n");
@@ -117,7 +115,7 @@ int main() {
 
     for (line = get_next_line(fd); line; line = get_next_line(fd))
     {
-        printf("| line: %s |", line);
+        printf(">>>>>>>>>> line: |%s|", line);
         printf("\n=== Free (line) ===\n");
         free(line);
     }
