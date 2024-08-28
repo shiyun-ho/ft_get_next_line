@@ -1,96 +1,96 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils_v7.c                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/27 21:39:28 by hshi-yun         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// /* ************************************************************************** */
+// /*                                                                            */
+// /*                                                        :::      ::::::::   */
+// /*   get_next_line_utils_v7.c                           :+:      :+:    :+:   */
+// /*                                                    +:+ +:+         +:+     */
+// /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
+// /*                                                +#+#+#+#+#+   +#+           */
+// /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
+// /*   Updated: 2024/08/27 21:39:28 by hshi-yun         ###   ########.fr       */
+// /*                                                                            */
+// /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
-#include "get_next_line.h"
+// #include <stdlib.h>
+// #include <stddef.h>
+// #include "get_next_line.h"
 
-void	*ft_calloc(size_t n, size_t size)
-{
-	void	*ptr;
-	size_t	total_size;
-	size_t	i;
+// void	*ft_calloc(size_t n, size_t size)
+// {
+// 	void	*ptr;
+// 	size_t	total_size;
+// 	size_t	i;
 
-	total_size = n * size;
-	if (size != 0 && total_size / size != n)
-		return (NULL);
+// 	total_size = n * size;
+// 	if (size != 0 && total_size / size != n)
+// 		return (NULL);
 
-	ptr = malloc(total_size);
-	if (!ptr)
-		return (NULL);
+// 	ptr = malloc(total_size);
+// 	if (!ptr)
+// 		return (NULL);
 
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)ptr)[i] = 0;
-		i++;
-	}
-	return (ptr);
-}
-int	ft_strlen(const char *s)
-{
-	int	i;
+// 	i = 0;
+// 	while (i < n)
+// 	{
+// 		((unsigned char *)ptr)[i] = 0;
+// 		i++;
+// 	}
+// 	return (ptr);
+// }
+// int	ft_strlen(const char *s)
+// {
+// 	int	i;
 
-	i = 0;
-	while (s[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
-{
-	char			*s3;
-	unsigned int	s3_size;
-	int				i;
-	int				j;
+// 	i = 0;
+// 	while (s[i] != '\0')
+// 	{
+// 		i++;
+// 	}
+// 	return (i);
+// }
+// char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
+// {
+// 	char			*s3;
+// 	unsigned int	s3_size;
+// 	int				i;
+// 	int				j;
 
-	s3_size = ft_strlen(s1) + (end_position - start_position + 1);
-	s3 = ft_calloc(s3_size + 1, sizeof(char));
+// 	s3_size = ft_strlen(s1) + (end_position - start_position + 1);
+// 	s3 = ft_calloc(s3_size + 1, sizeof(char));
 	
-	i = 0;
-	j = 0;
-	//copies from source (original str)
-	while (i < ft_strlen(s1))
-	{
-		s3[i] = s1[i];
-		i++;
-	}
-	//copies from additional
-	while (start_position <= end_position)
-	{
-		s3[i + j] = s2[start_position];
-		j++;
-		start_position++;	
-	}
-	s3[s3_size] = '\0';
+// 	i = 0;
+// 	j = 0;
+// 	//copies from source (original str)
+// 	while (i < ft_strlen(s1))
+// 	{
+// 		s3[i] = s1[i];
+// 		i++;
+// 	}
+// 	//copies from additional
+// 	while (start_position <= end_position)
+// 	{
+// 		s3[i + j] = s2[start_position];
+// 		j++;
+// 		start_position++;	
+// 	}
+// 	s3[s3_size] = '\0';
 	
-	// free(s1);
-	return (s3);
-}
-int		ft_strchr_index(char *s, int c)
-{
-	int		i;
-	int		len;
-	char	character;
+// 	// free(s1);
+// 	return (s3);
+// }
+// int		ft_strchr_index(char *s, int c)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	character;
 
-	i = 0;
-	len = ft_strlen(s);
-	character = (char)c;
-	while (i <= len)
-	{
-		if (s[i] == character)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
+// 	i = 0;
+// 	len = ft_strlen(s);
+// 	character = (char)c;
+// 	while (i <= len)
+// 	{
+// 		if (s[i] == character)
+// 			return (i);
+// 		i++;
+// 	}
+// 	return (-1);
+// }

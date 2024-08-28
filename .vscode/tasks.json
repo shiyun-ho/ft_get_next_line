@@ -8,7 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
-                "./get_next_line_utils_v7.c",
+                "./get_next_line_utils_v8.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
