@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_v9.c                                 :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 19:38:48 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/28 21:54:04 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char    *get_next_line(int fd)
     char        *line;
 
     line = NULL;
+    buffer = NULL;
     if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
         return (free(stash), stash = NULL, NULL);
     
@@ -51,7 +52,14 @@ char    *get_next_line(int fd)
         
         buffer = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
         bytes_read = read(fd, buffer, BUFFER_SIZE);
-        if (bytes_read <= 0)
+        //return NULL for both cases
+        if (bytes_read < 0)
+        {
+            free(buffer);
+            buffer = NULL;
+            return NULL;
+        }
+        if (bytes_read == 0)
         {
             if (!line && stash)
             {
@@ -63,7 +71,10 @@ char    *get_next_line(int fd)
                 buffer = NULL;
                 break;
             }
-            return (free(buffer), buffer = NULL, line);
+            if (!line)
+                return (free(buffer), buffer = NULL, line);
+            else
+                return NULL;
         }
         buffer[bytes_read] = '\0';
         
@@ -88,9 +99,16 @@ char    *get_next_line(int fd)
             stash = ft_strjoin(stash, buffer, 0, buffer_newline_index);
             line = (char *)ft_calloc(1, sizeof(char));
             line = ft_strjoin(line, stash, 0, (ft_strlen(stash) - 1));
-            free(stash);
-            stash = (char *)ft_calloc(1, BUFFER_SIZE);
-            stash = ft_strjoin(stash, buffer, buffer_newline_index + 1, BUFFER_SIZE - 1);
+            if (buffer[buffer_newline_index + 1] == '\0')
+            {
+                free(stash);
+                stash = NULL;
+            }
+            else
+            {
+                stash = (char *)ft_calloc(1, BUFFER_SIZE);
+                stash = ft_strjoin(stash, buffer, buffer_newline_index + 1, BUFFER_SIZE - 1);
+            }
             free(buffer);
             buffer = NULL;
             break;
@@ -107,8 +125,8 @@ int main() {
     int     fd;
     char    *line;
 
-//TODO: Resolve error - \n should be printed as empty line
-    fd = open("hello_2.txt", O_RDONLY);
+    // fd = open("hello_2.txt", O_RDONLY);
+    fd = open("gnlTester/41_with_nl", O_RDWR);
 
     if (fd == -1) {
         printf(">>> Unable to read file. \n");
@@ -117,12 +135,19 @@ int main() {
         printf(">>> File was opened successfully! \n");
     }
 
-    for (line = get_next_line(fd); line; line = get_next_line(fd))
-    {
-        printf(">>>>>>>>>> line: |%s", line);
-        printf("\n");
-        free(line);
-    }
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    
+    // printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    // printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    
+    // // for (line = get_next_line(fd); line; line = get_next_line(fd))
+    // {
+    //     printf(">>>>>>>>>> line: |%s", line);
+    //     printf("\n");
+    //     free(line);
+    // }
     close(fd);
 
     return (0);
