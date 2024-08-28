@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils_v8.c                           :+:      :+:    :+:   */
+/*   get_next_line_utils_v9.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 15:12:49 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:47:13 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,30 @@ int		ft_strchr_index(char *s, int c)
 		i++;
 	}
 	return (-1);
+}
+char	*ft_strtrim(char const *s1, int start_position)
+{
+	char	*str;
+	int		s1_len;
+	int		end_position;
+	int		i;
+	
+	s1_len = ft_strlen(s1);
+	end_position = s1_len - 1;
+
+	str = ft_calloc((end_position - start_position + 1 + 1), sizeof(char));
+	if (!str)
+		return (NULL);
+	if (str)
+	{
+		i = 0;
+		while(start_position <= end_position)
+		{
+			str[i] = s1[start_position];
+			start_position++;
+			i++;
+		}
+		str[i] = '\0';		
+	}
+	return (str);
 }
