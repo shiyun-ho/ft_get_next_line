@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 17:15:15 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:38:48 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ char    *get_next_line(int fd)
                 line = ft_strjoin(line, stash, 0, ft_strlen(stash) - 1);
                 free(stash);
                 stash = NULL;
+                free(buffer);
+                buffer = NULL;
                 break;
             }
             return (free(buffer), buffer = NULL, line);
@@ -69,18 +71,20 @@ char    *get_next_line(int fd)
         if (!stash)
             stash = (char *)ft_calloc(1, sizeof(char));
 
+//if newline not found in buffer
         if (buffer_newline_index == -1)
         {
             //keep adding buffer to stash
             stash = ft_strjoin(stash, buffer, 0, BUFFER_SIZE - 1);
             if (!stash)
                 return (free(buffer), buffer = NULL, NULL);
+            free(buffer);
+            buffer = NULL;
         }
         //if newline is found in buffer
         else
         {
             //add to stash till the position where the index is
-            //TODO: Check if str joins successfully when newline_index = 0
             stash = ft_strjoin(stash, buffer, 0, buffer_newline_index);
             line = (char *)ft_calloc(1, sizeof(char));
             line = ft_strjoin(line, stash, 0, (ft_strlen(stash) - 1));

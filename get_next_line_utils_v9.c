@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 15:47:13 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:30:25 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 	}
 	s3[s3_size] = '\0';
 	
-	// free(s1);
+	free(s1);
 	return (s3);
 }
 int		ft_strchr_index(char *s, int c)
@@ -94,7 +94,7 @@ int		ft_strchr_index(char *s, int c)
 	}
 	return (-1);
 }
-char	*ft_strtrim(char const *s1, int start_position)
+char	*ft_strtrim(char *s1, int start_position)
 {
 	char	*str;
 	int		s1_len;
@@ -118,5 +118,6 @@ char	*ft_strtrim(char const *s1, int start_position)
 		}
 		str[i] = '\0';		
 	}
+	free(s1);
 	return (str);
 }
