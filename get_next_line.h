@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:22:23 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 19:30:28 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/29 17:37:09 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stddef.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 5
+# define BUFFER_SIZE 42
 # endif
 
 char    *get_next_line(int fd);

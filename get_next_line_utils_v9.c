@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 19:30:25 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:53:59 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,5 +119,6 @@ char	*ft_strtrim(char *s1, int start_position)
 		str[i] = '\0';		
 	}
 	free(s1);
+	s1 = NULL;
 	return (str);
 }

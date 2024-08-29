@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_v9.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/28 21:54:04 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:05:07 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,22 @@ char    *get_next_line(int fd)
     static char *stash;
     char        *line;
 
+    //initialise to NULL if line OR buffer was freed but ever set NULL
     line = NULL;
     buffer = NULL;
+    //error handling for invalid param ===> free existing stash if exists
     if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
         return (free(stash), stash = NULL, NULL);
     
+    //initialise looping through the fiel
     bytes_read = 1;
     while (bytes_read > 0)
     {
+        //this algo might be causing it to slow down
+        //if stash exists
         if (stash)
         {
+            //check for where \n is found inside stash
             int stash_newline_index = ft_strchr_index(stash, '\n');
             
             //if \n is found in stash, place it in line
@@ -69,6 +75,8 @@ char    *get_next_line(int fd)
                 stash = NULL;
                 free(buffer);
                 buffer = NULL;
+                if (!line)
+                    return (NULL);
                 break;
             }
             if (!line)
@@ -98,7 +106,8 @@ char    *get_next_line(int fd)
             //add to stash till the position where the index is
             stash = ft_strjoin(stash, buffer, 0, buffer_newline_index);
             line = (char *)ft_calloc(1, sizeof(char));
-            line = ft_strjoin(line, stash, 0, (ft_strlen(stash) - 1));
+            int stash_strlen = ft_strlen(stash);
+            line = ft_strjoin(line, stash, 0, (stash_strlen - 1));
             if (buffer[buffer_newline_index + 1] == '\0')
             {
                 free(stash);
@@ -106,8 +115,12 @@ char    *get_next_line(int fd)
             }
             else
             {
+                free(stash);
+                stash = NULL;
                 stash = (char *)ft_calloc(1, BUFFER_SIZE);
-                stash = ft_strjoin(stash, buffer, buffer_newline_index + 1, BUFFER_SIZE - 1);
+                // stash = ft_strjoin(stash, buffer, buffer_newline_index + 1, BUFFER_SIZE - 1);
+                int buffer_strlen = ft_strlen(buffer);
+                stash = ft_strjoin(stash, buffer, buffer_newline_index + 1, (buffer_strlen - 1));
             }
             free(buffer);
             buffer = NULL;
@@ -126,7 +139,7 @@ int main() {
     char    *line;
 
     // fd = open("hello_2.txt", O_RDONLY);
-    fd = open("gnlTester/41_with_nl", O_RDWR);
+    fd = open("gnlTester/multiple_nlx5", O_RDWR);
 
     if (fd == -1) {
         printf(">>> Unable to read file. \n");
@@ -138,11 +151,14 @@ int main() {
     printf(">>>>>>>>>> line: |%s", get_next_line(fd));
     printf(">>>>>>>>>> line: |%s", get_next_line(fd));
     printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
+    printf(">>>>>>>>>> line: |%s", get_next_line(fd));
     
     // printf(">>>>>>>>>> line: |%s", get_next_line(fd));
     // printf(">>>>>>>>>> line: |%s", get_next_line(fd));
     
-    // // for (line = get_next_line(fd); line; line = get_next_line(fd))
+    // for (line = get_next_line(fd); line; line = get_next_line(fd))
     // {
     //     printf(">>>>>>>>>> line: |%s", line);
     //     printf("\n");
