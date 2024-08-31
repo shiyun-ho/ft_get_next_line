@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/26 21:03:17 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/31 17:00:35 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,52 +47,41 @@ int	ft_strlen(const char *s)
 	}
 	return (i);
 }
-char	*ft_strjoin(char const *s1, char const *s2, int size)
+char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 {
-	char			*s_new;
-	unsigned int	s_new_size;
+	char			*s3;
+	unsigned int	s3_size;
+	int				s1_len;
+	int				i;
+	int				j;
+
+	s1_len = ft_strlen(s1);
+	s3_size = s1_len + (end_position - start_position + 1);
+	s3 = ft_calloc(s3_size + 1, sizeof(char));
+	if(!s3)
+		return (NULL);
 	
-	s_new_size = ft_strlen(s1) + ft_strlen(s2);
-	s_new = ft_calloc(s_new_size + 1, sizeof(char));
+	i = 0;
+	j = 0;
+	//copies from source (original str)
+	while (i < s1_len)
+	{
+		s3[i] = s1[i];
+		i++;
+	}
+	//copies from additional
+	while (start_position <= end_position)
+	{
+		s3[i + j] = s2[start_position];
+		j++;
+		start_position++;	
+	}
+	s3[s3_size] = '\0';
 	
-	int i = 0;
-	if (ft_strlen(s1) > 0)
-	{
-		while (i < ft_strlen(s1))
-		{
-			s_new[i] = s1[i];
-			i++;
-		}
-	}
-	int j = 0;
-	//Error handling for when str joins buffer array to line
-	/**
-	 * line = ft_strjoin(line, buffer_array, newline_position);
-	 * size = newline_position
-	 * 		
-	 */
-	if (size < BUFFER_SIZE)
-	{
-		while (j < size)
-		{
-			s_new[i + j] = s2[j];
-			j++;
-		}
-		s_new[i + j] = '\0';
-	}
-	else
-	{
-		while ((i + j) < s_new_size)
-		{
-			s_new[i + j] = s2[j];
-			j++;
-		}
-		s_new[s_new_size] = '\0';
-	}	
-	free((char *)s1);
-	return(s_new);
+	free(s1);
+	return (s3);
 }
-int		ft_strchr_index(const char *s, int c)
+int		ft_strchr_index(char *s, int c)
 {
 	int		i;
 	int		len;
@@ -109,25 +98,31 @@ int		ft_strchr_index(const char *s, int c)
 	}
 	return (-1);
 }
-void	trim_newline(char *s1, int position)
+char	*ft_strtrim(char *s1, int start_position)
 {
-	int	i;
-	int	start_position;
-	int end_position;
+	char	*str;
+	int		s1_len;
+	int		end_position;
+	int		i;
 	
-	if (!s1)
-		return;
-	start_position = position + 1;
-	end_position = ft_strlen(s1) - 1;
-	i = 0;
-	while (s1[i] != '\0')
+	s1_len = ft_strlen(s1);
+	end_position = s1_len - 1;
+
+	str = ft_calloc((end_position - start_position + 1 + 1), sizeof(char));
+	if (!str)
+		return (NULL);
+	if (str)
 	{
-		while (start_position <= end_position)
+		i = 0;
+		while(start_position <= end_position)
 		{
-			s1[i] = s1[start_position];
-			i++;
+			str[i] = s1[start_position];
 			start_position++;
+			i++;
 		}
-		s1[i] = '\0';
+		str[i] = '\0';		
 	}
+	free(s1);
+	s1 = NULL;
+	return (str);
 }

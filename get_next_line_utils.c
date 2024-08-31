@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils_v9.c                           :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/29 20:53:59 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:33:00 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,26 @@ char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 {
 	char			*s3;
 	unsigned int	s3_size;
+	int				s1_len;
 	int				i;
-	int				j;
 
-	s3_size = ft_strlen(s1) + (end_position - start_position + 1);
+	s1_len = ft_strlen(s1);
+	s3_size = s1_len + (end_position - start_position + 1);
 	s3 = ft_calloc(s3_size + 1, sizeof(char));
 	
 	i = 0;
-	j = 0;
-	//copies from source (original str)
-	while (i < ft_strlen(s1))
+	while (i < s1_len)
 	{
 		s3[i] = s1[i];
 		i++;
 	}
-	//copies from additional
 	while (start_position <= end_position)
 	{
-		s3[i + j] = s2[start_position];
-		j++;
+		s3[i] = s2[start_position];
+		i++;
 		start_position++;	
 	}
 	s3[s3_size] = '\0';
-	
 	free(s1);
 	return (s3);
 }
@@ -106,7 +103,7 @@ char	*ft_strtrim(char *s1, int start_position)
 
 	str = ft_calloc((end_position - start_position + 1 + 1), sizeof(char));
 	if (!str)
-		return (NULL);
+		return (free(s1), NULL);
 	if (str)
 	{
 		i = 0;

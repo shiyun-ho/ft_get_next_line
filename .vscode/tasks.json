@@ -9,6 +9,7 @@
                 "-g",
                 "${file}",
                 "./get_next_line_utils.c",
+                "test.c", 
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
