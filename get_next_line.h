@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:22:23 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 16:33:03 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/09/01 20:24:25 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,19 @@
 #include <stddef.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 15
+# define BUFFER_SIZE 30
 # endif
+
+typedef struct  s_list
+{
+    ssize_t     bytes_read;
+    char        *buffer;
+    char        *stash;
+    char        *line;
+    int         stash_result;
+    int         buffer_result;
+    int         line_result;
+}               t_list;
 
 char    *get_next_line(int fd);
 void	*ft_calloc(size_t n, size_t size);

@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 17:23:51 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/09/01 21:19:42 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 	s1_len = ft_strlen(s1);
 	s3_size = s1_len + (end_position - start_position + 1);
 	s3 = ft_calloc(s3_size + 1, sizeof(char));
-	
+	if (!s3)
+		return (NULL);
+		
 	i = 0;
 	while (i < s1_len)
 	{
