@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 21:32:56 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/09/01 21:37:27 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,14 @@ int    process_stash(char **stash, char **line)
     {
         *line = (char *)ft_calloc(1, sizeof(char));
         if (!*line)
-        {
-            // free_resources(stash, NULL, line);
             return (-1);
-        }
         new = ft_strjoin(*line, *stash, 0, stash_newline_index);
         if (!new)
-        {
-            // free_resources(stash, NULL, line);
             return (-1);
-        }
         *line = new;
         new = ft_strtrim(*stash, stash_newline_index + 1);
         if (!new)
-        {
-            // free_resources(stash, NULL, line);
             return (-1);
-        }
         *stash = new;
         return (1);
     }
@@ -78,16 +69,10 @@ int    process_buffer(ssize_t bytes, char **buffer, char **stash, char **line)
             {
                 *line = (char *)ft_calloc(1, sizeof(char));
                 if (!*line)
-                {
-                    // free_resources(stash, buffer, line);
                     return (-1);
-                }
                 new = ft_strjoin(*line, *stash, 0, ft_strlen(*stash) - 1);
                 if (!new)
-                {
-                    // free_resources(stash, buffer, line);
                     return (-1);
-                }
                 *line = new;
                 free_resources(stash, buffer, NULL);
                 if (!*line || !*line[0])
@@ -113,10 +98,8 @@ int     process_line(char **buffer, char **stash, char **line)
     if (!(*stash))
         *stash = (char *)ft_calloc(1, sizeof(char));
     if (!(*stash))
-    {
-        // free_resources(stash, buffer, line);
         return (-1);
-    }
+
     if (newline_index == -1)
     {
         new = ft_strjoin(*stash, *buffer, 0, BUFFER_SIZE - 1);
@@ -131,34 +114,22 @@ int     process_line(char **buffer, char **stash, char **line)
     *stash = new;
     *line = (char *)ft_calloc(1, sizeof(char));
     if (!(*line))
-    {
-        // free_resources(stash, buffer, line);
         return (-1);
-    }
     stash_strlen = ft_strlen(*stash);
     new = ft_strjoin(*line, *stash, 0, (stash_strlen - 1));
     if (!new)
-    {
-        // free_resources(stash, buffer, line);
         return (-1);
-    }
     *line = new;
     free_resources(stash, NULL, NULL);
     if ((*buffer)[newline_index + 1] != '\0')
     {
         *stash = (char *)ft_calloc(1, BUFFER_SIZE);
         if (!(*stash))
-        {
-            // free_resources(stash, buffer, line);
             return (-1);
-        }
         int strlen = ft_strlen(*buffer);
         new = ft_strjoin(*stash, *buffer, newline_index + 1, (strlen - 1));
         if (!new)
-        {
-            // free_resources(stash, buffer, line);
             return (-1);
-        }
         *stash = new;
     }
     return(free_resources(NULL, buffer, NULL), 1);
@@ -190,8 +161,6 @@ char    *get_next_line(int fd)
             else if (gnl.stash_result == -1)
                 return (free_resources(&gnl.stash, &gnl.buffer, &gnl.line), NULL);
         }
-        // if (gnl.stash && gnl.stash_result)
-        //     return (gnl.line);
         if (gnl.stash_result == -1)
         {
             free_resources(&gnl.stash, &gnl.buffer, &gnl.line);
@@ -210,7 +179,6 @@ char    *get_next_line(int fd)
             free_resources(&gnl.stash, &gnl.buffer, &gnl.line);
             return (NULL);
         }
-        // if (!gnl.buffer && gnl.buffer_result)
         if (!gnl.buffer)
         {
             if (gnl.buffer_result)
