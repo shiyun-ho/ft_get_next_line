@@ -6,7 +6,7 @@
 /*   By: shiyun <shiyun@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 23:54:07 by shiyun           ###   ########.fr       */
+/*   Updated: 2024/09/01 23:47:37 by shiyun           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void  free_resources(char **stash, char **buffer, char **line)
 int    process_stash(char **stash, char **line)
 {
     int     stash_newline_index;
+    char    *new;
     
     stash_newline_index = ft_strchr_index(*stash, '\n');
     if (stash_newline_index != -1)
@@ -41,12 +42,14 @@ int    process_stash(char **stash, char **line)
         *line = ft_calloc(1, sizeof(char));
         if (!*line)
             return (-1);
-        *line = ft_strjoin(*line, *stash, 0, stash_newline_index);
-        if (!*line)
+        new = ft_strjoin(*line, *stash, 0, stash_newline_index);
+        if (!new)
             return (-1);
-        *stash = ft_strtrim(*stash, stash_newline_index + 1);
-        if (!*stash)
+        *line = new;
+        new = ft_strtrim(*stash, stash_newline_index + 1);
+        if (!new)
             return (-1);
+        *stash = new;
         return (1);
     }
     return (0);
@@ -54,6 +57,8 @@ int    process_stash(char **stash, char **line)
 
 int    process_buffer(ssize_t bytes, char **buffer, char **stash, char **line)
 {
+    char    *new;
+    
     if (bytes < 0)
         return (-1);
     if (bytes == 0)
@@ -61,9 +66,12 @@ int    process_buffer(ssize_t bytes, char **buffer, char **stash, char **line)
         if (!(*line) && (*stash))
         {
             *line = ft_calloc(1, sizeof(char));
-            *line = ft_strjoin(*line, *stash, 0, ft_strlen(*stash) - 1);
-            if (!line)
+            if (!*line)
                 return (-1);
+            new = ft_strjoin(*line, *stash, 0, ft_strlen(*stash) - 1);
+            if (!new)
+                return (-1);
+            *line = new;
             free_resources(stash, buffer, NULL);
             if (!*line || !*line[0])
                 return (free(*line), *line = NULL, 0);
@@ -79,6 +87,7 @@ int     process_line(char **buffer, char **stash, char **line)
 {
     int     newline_index;
     int     stash_strlen;
+    char    *new;
 
     newline_index = ft_strchr_index(*buffer, '\n');
     if (!(*stash))
@@ -87,21 +96,23 @@ int     process_line(char **buffer, char **stash, char **line)
         return (-1);
     if (newline_index == -1)
     {
-        *stash = ft_strjoin(*stash, *buffer, 0, BUFFER_SIZE - 1);
-        if (!*stash)
+        new = ft_strjoin(*stash, *buffer, 0, BUFFER_SIZE - 1);
+        if (!new)
             return (-1);
-        return(free_resources(NULL, buffer, NULL), 0);
+        return(*stash = new, free_resources(NULL, buffer, NULL), 0);
     }
-    *stash  = ft_strjoin(*stash, *buffer, 0, newline_index);
-    if (!*stash)
+    new = ft_strjoin(*stash, *buffer, 0, newline_index);
+    if (!new)
         return (-1);
+    *stash = new;
     *line = ft_calloc(1, sizeof(char));
     if (!(*line))
         return (-1);
     stash_strlen = ft_strlen(*stash);
-    *line = ft_strjoin(*line, *stash, 0, (stash_strlen - 1));
-    if (!*line)
+    new = ft_strjoin(*line, *stash, 0, (stash_strlen - 1));
+    if (!new)
         return (-1);
+    *line = new;
     free_resources(stash, NULL, NULL);
     if ((*buffer)[newline_index + 1] != '\0')
     {
@@ -109,9 +120,10 @@ int     process_line(char **buffer, char **stash, char **line)
         if (!(*stash))
             return (-1);
         int strlen = ft_strlen(*buffer);
-        *stash = ft_strjoin(*stash, *buffer, newline_index + 1, (strlen - 1));
-        if (!*stash)
+        new = ft_strjoin(*stash, *buffer, newline_index + 1, (strlen - 1));
+        if (!new)
             return (-1);
+        *stash = new;
     }
     return(free_resources(NULL, buffer, NULL), 1);
 }

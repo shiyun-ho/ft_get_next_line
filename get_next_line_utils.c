@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiyun <shiyun@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 21:38:39 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/09/01 23:22:41 by shiyun           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 	s3 = ft_calloc(s3_size + 1, sizeof(char));
 	if (!s3)
 		return (NULL);
-		
 	i = 0;
 	while (i < s1_len)
 	{
