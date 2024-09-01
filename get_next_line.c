@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiyun <shiyun@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:04:41 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/01 00:53:42 by shiyun           ###   ########.fr       */
+/*   Updated: 2024/09/01 15:37:00 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,33 +49,68 @@ int    process_stash(char **stash, char **line)
     return (0);
 }
 
+// char    *process_buffer(ssize_t bytes, char **buffer, char **stash, char **line)
+// {
+//     if (bytes < 0)
+//         // return (free_resources(&buffer, &stash, NULL), NULL);
+//         return (free_resources(buffer, stash, NULL), NULL);
+//     if (bytes == 0)
+//     {
+//         if (!line)
+//         {
+//             if (stash)
+//             {
+//                 *line = (char *)ft_calloc(1, sizeof(char));
+//                 *line = ft_strjoin(*line, *stash, 0, ft_strlen(*stash) - 1);
+//                 free_resources(stash, buffer, NULL);
+//                 if (!line || !line[0])
+//                     return (free(line), line = NULL, NULL);
+//                 return (*line);
+//             }
+//             free_resources(NULL, buffer, NULL);
+//             return (*line);   
+//         }
+//         else
+//         {
+//             free_resources(stash, NULL, line);    
+//             return (NULL);
+//         }
+//     }
+//     buffer[bytes] = '\0';
+//     return (*buffer);
+// }
 char    *process_buffer(ssize_t bytes, char **buffer, char **stash, char **line)
 {
     if (bytes < 0)
-        // return (free_resources(&buffer, &stash, NULL), NULL);
         return (free_resources(buffer, stash, NULL), NULL);
+
     if (bytes == 0)
     {
         if (!line)
         {
             if (stash)
             {
-                *line = (char *)ft_calloc(1, sizeof(char));
-                *line = ft_strjoin(*line, *stash, 0, ft_strlen(*stash) - 1);
+                *line = ft_strjoin(*line, *stash, 0, ft_strlen(*stash));
                 free_resources(stash, buffer, NULL);
-                if (!line || !line[0])
+                if (!*line || !*line[0])
                     return (free(line), line = NULL, NULL);
                 return (*line);
             }
             free_resources(NULL, buffer, NULL);
-            return (*line);   
+            return (*line);
         }
         else
-            return (NULL);
+        {
+            free_resources(stash, NULL, line);
+            // return (NULL);
+            return (*line);
+        }
     }
-    *buffer[bytes] = '\0';
+
+    buffer[bytes] = '\0';
     return (*buffer);
 }
+
 /**
  * @brief: Function that returns a line read from a file descriptor
  * @param: fd: The file descriptor to read from
@@ -124,20 +159,24 @@ char    *get_next_line(int fd)
         //     else
         //         return (NULL);
         // }
+        process_buffer(bytes_read, &buffer, &stash, &line);
         // buffer[bytes_read] = '\0';
-        //TODO: Resolve!
-        line = process_buffer(bytes_read, &buffer, &stash, &line);
         
         //process_to_line(char **buffer, char **stash, char **line)
         int buffer_newline_index = ft_strchr_index(buffer, '\n');
         if (!stash)
             stash = (char *)ft_calloc(1, sizeof(char));
 
+//no newline found in buffer, join all
         if (buffer_newline_index == -1)
         {
             stash = ft_strjoin(stash, buffer, 0, BUFFER_SIZE - 1);
             if (!stash)
-                return (free(buffer), buffer = NULL, NULL);
+            {
+                free_resources(&stash, &buffer, NULL);
+                return (NULL);
+            }
+                // return (free(buffer), buffer = NULL, NULL);
             free_resources(NULL, &buffer, NULL);
         }
         else

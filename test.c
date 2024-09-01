@@ -6,7 +6,7 @@
 /*   By: hshi-yun <hshi-yun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 17:25:13 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/08/31 19:16:04 by hshi-yun         ###   ########.fr       */
+/*   Updated: 2024/09/01 13:34:33 by hshi-yun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int main()
     int     fd;
     char    *line;
     
-    fd = open("1char.txt", O_RDONLY);
+    fd = open("gnlTester/41_with_nl", O_RDONLY);
     
     if (fd == -1)
     {
@@ -32,11 +32,11 @@ int main()
         printf("File was opened successfully! \n");
     }
 
-    // for (line = get_next_line(fd); line; line = get_next_line(fd))
-    // {
-    //     printf("line: %s", line);
-    //     free(line);
-    // }
+    for (line = get_next_line(fd); line; line = get_next_line(fd))
+    {
+        printf("line: %s", line);
+        free(line);
+    }
     
     close(fd);
     
