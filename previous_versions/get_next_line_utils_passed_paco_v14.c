@@ -6,7 +6,7 @@
 /*   By: shiyun <shiyun@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 14:00:47 by hshi-yun          #+#    #+#             */
-/*   Updated: 2024/09/02 23:57:16 by shiyun           ###   ########.fr       */
+/*   Updated: 2024/09/01 23:22:41 by shiyun           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ void	*ft_calloc(size_t n, size_t size)
 	total_size = n * size;
 	if (size != 0 && total_size / size != n)
 		return (NULL);
+
 	ptr = malloc(total_size);
 	if (!ptr)
 		return (NULL);
+
 	i = 0;
 	while (i < n)
 	{
@@ -34,7 +36,6 @@ void	*ft_calloc(size_t n, size_t size)
 	}
 	return (ptr);
 }
-
 int	ft_strlen(const char *s)
 {
 	int	i;
@@ -46,7 +47,6 @@ int	ft_strlen(const char *s)
 	}
 	return (i);
 }
-
 char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 {
 	char			*s3;
@@ -69,14 +69,13 @@ char	*ft_strjoin(char *s1, char *s2, int start_position, int end_position)
 	{
 		s3[i] = s2[start_position];
 		i++;
-		start_position++;
+		start_position++;	
 	}
 	s3[s3_size] = '\0';
 	free(s1);
 	return (s3);
 }
-
-int	ft_strchr_index(char *s, int c)
+int		ft_strchr_index(char *s, int c)
 {
 	int		i;
 	int		len;
@@ -93,29 +92,29 @@ int	ft_strchr_index(char *s, int c)
 	}
 	return (-1);
 }
-
 char	*ft_strtrim(char *s1, int start_position)
 {
 	char	*str;
 	int		s1_len;
 	int		end_position;
 	int		i;
-
+	
 	s1_len = ft_strlen(s1);
 	end_position = s1_len - 1;
+
 	str = ft_calloc((end_position - start_position + 1 + 1), sizeof(char));
 	if (!str)
 		return (free(s1), NULL);
 	if (str)
 	{
 		i = 0;
-		while (start_position <= end_position)
+		while(start_position <= end_position)
 		{
 			str[i] = s1[start_position];
 			start_position++;
 			i++;
 		}
-		str[i] = '\0';
+		str[i] = '\0';		
 	}
 	free(s1);
 	s1 = NULL;
